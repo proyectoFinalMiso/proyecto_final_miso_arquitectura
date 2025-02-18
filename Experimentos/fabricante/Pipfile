@@ -12,6 +12,7 @@ sqlalchemy = "*"
 flask-sqlalchemy = "*"
 marshmallow-sqlalchemy = "*"
 faker = "*"
+requests = "*"
 
 [dev-packages]
 

@@ -15,4 +15,7 @@ def config_app(db_url):
 
 if __name__ == '__main__':
     config_app(argv[1])
+    print(config_app(argv[1]))
+    db_url = f"sqlite:///microservice_test.db"
+    config_app(db_url)
     app.run(host="0.0.0.0", port=3001, debug=True)
