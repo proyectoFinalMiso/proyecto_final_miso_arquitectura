@@ -5,7 +5,7 @@ from sys import argv
 from waitress import serve
 
 from src.blueprints.routes import blueprint
-from src.constants.urls import DATABASE_URI
+from src.constants.urls import database_host
 from src.models.model import db
 
 load_dotenv('.env')
@@ -24,6 +24,6 @@ if __name__ == '__main__':
     if argv[1] == 'dev':
         db_url = "sqlite:///microservice_test.db"
     else:
-        db_url = DATABASE_URI
+        db_url = database_host()
     config_app(db_url)
-    serve(app, host="0.0.0.0", port=3002)
+    serve(app, host="0.0.0.0", port=3001)
