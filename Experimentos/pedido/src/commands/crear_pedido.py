@@ -1,6 +1,4 @@
-from requests import post
 from uuid import uuid4
-from datetime import datetime
 
 from src.commands.base_command import BaseCommand
 from src.models.model import db, Pedido

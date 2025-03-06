@@ -1,4 +1,4 @@
-FROM python:3.10.11
+FROM python:3.12-bookworm
 
 WORKDIR /
 
@@ -14,4 +14,4 @@ COPY . .
 
 EXPOSE 3001
 
-CMD [ "pipenv", "run", "python", "main.py", "develop"]
+CMD [ "pipenv", "run", "python", "app.py", "production"]
