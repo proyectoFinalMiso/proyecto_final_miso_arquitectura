@@ -4,13 +4,14 @@ from src.commands.base_command import BaseCommand
 from src.models.model import db, Fabricante, Producto
 
 
-class CrearFabricante(BaseCommand):
+class CrearProducto(BaseCommand):
     def __init__(self, request_body: dict):
         self.producto_template = request_body
 
     def verificar_producto_existe(self) -> bool:
         existe_producto_query = Producto.query.filter(
-            (Producto.sku == self.producto_template["sku"])
+            (Producto.nombre == self.producto_template["nombre"]) &
+            (Producto.fabricante == self.producto_template["id_fabricante"])
         ).first()
 
         if existe_producto_query:
@@ -43,8 +44,7 @@ class CrearFabricante(BaseCommand):
 
     def check_campos_requeridos(self) -> bool:
         if (
-            self.producto_template.get("sku")
-            and self.producto_template.get("fabricante")
+            self.producto_template.get("id_fabricante")
             and self.producto_template.get("nombre")
             and self.producto_template.get("valorUnitario")
         ):
@@ -62,7 +62,7 @@ class CrearFabricante(BaseCommand):
         if self.verificar_producto_existe():
             return {"response": {"msg": "Producto ya existe"}, "status_code": 400}
         
-        if not self.verificar_fabricante_existe(self.producto_template["fabricante"]):
+        if not self.verificar_fabricante_existe(self.producto_template["id_fabricante"]):
             return {"response": {"msg": "El fabricante indicado no existe"}, "status_code": 400}
 
         id_unico = False
@@ -73,8 +73,7 @@ class CrearFabricante(BaseCommand):
 
         nuevo_producto = Producto(
             id=id_producto,        
-            sku=self.producto_template["sku"],
-            fabricante=self.producto_template["fabricante"],
+            fabricante=self.producto_template["id_fabricante"],
             nombre=self.producto_template["nombre"],
             valorUnitario=self.producto_template["valorUnitario"],
         )

@@ -29,5 +29,5 @@ class PackingList(db.Model):
     __tablename__ = 'packingLists'
 
     id = db.Column(db.String, primary_key=True)
-    producto = db.Column(db.String, server_default="{}")
+    producto = db.Column(db.String, db.ForeignKey('productos.id'))
     cantidad = db.Column(db.String, nullable=False)

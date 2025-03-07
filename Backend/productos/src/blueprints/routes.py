@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from src.commands.crear_fabricante import CrearFabricante
+from src.commands.crear_producto import CrearProducto
 from src.commands.health_check import HealthCheck
 
 blueprint = Blueprint('fabricantes', __name__)
@@ -16,4 +17,6 @@ def crear_fabricante():
 
 @blueprint.post('/producto/crear')
 def crear_producto():
-    pass
+    body = request.get_json()
+    response = CrearProducto(body).execute()
+    return jsonify(response['response']), response['status_code']
