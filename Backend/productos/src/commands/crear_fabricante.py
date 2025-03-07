@@ -1,4 +1,3 @@
-from requests import post
 from uuid import uuid4
 
 from src.commands.base_command import BaseCommand
