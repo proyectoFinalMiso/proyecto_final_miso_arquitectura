@@ -21,9 +21,11 @@ def config_app(db_url):
         db.create_all()
 
 if __name__ == '__main__':
-    if argv[1] == 'dev':
-        db_url = "sqlite:///microservice_test.db"
-    else:
-        db_url = database_host()
+    db_url = database_host()
     config_app(db_url)
-    serve(app, host="0.0.0.0", port=3001)
+    
+    if argv[1] == 'dev':        
+        app.run(debug=True, host="0.0.0.0", port=3002)
+    else:
+        serve(app, host="0.0.0.0", port=3002)
+    
