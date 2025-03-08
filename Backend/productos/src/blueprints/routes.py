@@ -3,19 +3,19 @@ from src.commands.crear_fabricante import CrearFabricante
 from src.commands.crear_producto import CrearProducto
 from src.commands.health_check import HealthCheck
 
-blueprint = Blueprint('fabricantes', __name__)
+blueprint = Blueprint('productos', __name__)
 
-@blueprint.get('/')
+@blueprint.get('/health')
 def health_check():
     return HealthCheck().execute()
 
-@blueprint.post('/fabricante/crear')
+@blueprint.post('/fabricante')
 def crear_fabricante():
     body = request.get_json()
     response = CrearFabricante(body).execute()
     return jsonify(response['response']), response['status_code']
 
-@blueprint.post('/producto/crear')
+@blueprint.post('/producto')
 def crear_producto():
     body = request.get_json()
     response = CrearProducto(body).execute()
