@@ -11,8 +11,7 @@ class CrearPackingList(BaseCommand):
         self.body = request_body
 
     def verificar_id_existe(self, id: UUID) -> bool:
-        existe_id_query = PackingList.query.filter((PackingList.id == id)).first()
-
+        existe_id_query = PackingList.query.filter((PackingList.listID == id)).first()
         if existe_id_query:
             return True
         else:
@@ -22,31 +21,21 @@ class CrearPackingList(BaseCommand):
         return str(uuid4())
 
     def validar_productos_existen(self, lista_productos: list) -> bool:
-        validacion = []
-        adaptador = AdaptadorProductos(getenv("MS_PRODUCTOS_URL", 'https://cr-ms-productos-488938258128.us-central1.run.app'))
-        for sku in lista_productos:
-            validacion.append(adaptador.confirmar_producto_existe(sku))
-        return all(validacion)
-
-    def check_campos_requeridos(self) -> bool:
-        if (
-            self.body.get("productos")
-        ):
-            return True
-        else:
-            return False
+        productos = []
+        adaptador = AdaptadorProductos(getenv("MS_PRODUCTOS_URL"))
+        for producto in lista_productos:
+            if not producto:
+                return False
+            producto_existente = adaptador.confirmar_producto_existe(producto['sku'])
+            producto['costoTotal'] = producto['cantidad'] * producto_existente['valorUnitario']
+            productos.append(producto)
+        return productos
 
     def execute(self):
-        lista_productos = self.body.get("productos")
-        lista_sku = [producto["sku"] for producto in lista_productos]
+        lista_productos = self.body
 
-        if not self.check_campos_requeridos():
-            return {
-                "response": {"msg": "Campos requeridos no cumplidos"},
-                "status_code": 400,
-            }
-
-        if not self.validar_productos_existen(lista_sku):
+        productos = self.validar_productos_existen(lista_productos)
+        if not productos:
             return {
                 "response": {"msg": "Hay productos que no existen en el sistema"},
                 "status_code": 400,
@@ -58,11 +47,14 @@ class CrearPackingList(BaseCommand):
             if not self.verificar_id_existe(id_packingList):
                 id_unico = True
 
-        for producto in lista_productos:
+        valorFactura = 0
+        for producto in productos:
+            valorFactura += producto["costoTotal"]
             posicion = PackingList(
                 listID=id_packingList,
                 producto=producto["sku"],
                 cantidad=producto["cantidad"],
+                costoTotal=producto["costoTotal"]
             )
             db.session.add(posicion)
             try:
@@ -74,6 +66,6 @@ class CrearPackingList(BaseCommand):
                     "status_code": 500,
                 }
         return {
-            "response": {"msg": "Producto creado exitosamente"},
+            "response": {"msg": "Packing list creado con exito", "body": {"listID": id_packingList, "valorFactura": valorFactura}},
             "status_code": 201,
         }

@@ -25,5 +25,6 @@ def crear_producto():
 @blueprint.post('/producto/buscar')
 def buscar_producto():
     body = request.get_json()
+    print(body)
     response = BuscarProducto(body).execute()
     return jsonify(response['response']), response['status_code']

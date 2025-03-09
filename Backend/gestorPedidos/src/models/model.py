@@ -1,7 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Identity
 from enum import Enum
-from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -15,16 +14,13 @@ class Pedido(db.Model):
     __tablename__ = 'pedidos'
 
     id = db.Column(db.String, primary_key=True)
-    packingList = db.Column(db.Integer, db.ForeignKey('packingLists.id'), nullable=False)
+    packingList = db.Column(db.String, nullable=False)
     cliente = db.Column(db.String, nullable=False)
     vendedor = db.Column(db.String, nullable=False)
-    fechaIngreso = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    fechaIngreso = db.Column(db.DateTime, nullable=False)
     destino = db.Column(db.String, nullable=False)
     estado = db.Column(db.Enum(EstadoPedido), nullable=False)
     valorFactura = db.Column(db.Float, nullable=False)
-
-    # Relación entre pedido y packing list
-    packing_list = db.relationship('PackingList', backref='pedidos')
 
 class PackingList(db.Model):
     __tablename__ = 'packingLists'
@@ -32,3 +28,4 @@ class PackingList(db.Model):
     listID = db.Column(db.String)
     producto = db.Column(db.String, nullable=False)
     cantidad = db.Column(db.String, nullable=False)
+    costoTotal = db.Column(db.Float, nullable=False)

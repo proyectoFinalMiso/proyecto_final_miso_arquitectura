@@ -15,9 +15,11 @@ class AdaptadorProductos(BaseHttpAdapter):
     
     def confirmar_producto_existe(self, sku:str=None):
         url = f"{self.url}/producto/buscar"
+        data = {'sku': sku}
         try:
-            response = self.session.post(url, data=sku)
+            response = self.session.post(url, json=data)
             response.raise_for_status()
-            return True
+            producto = response.json()['body']
+            return producto
         except RequestException:
             return False
