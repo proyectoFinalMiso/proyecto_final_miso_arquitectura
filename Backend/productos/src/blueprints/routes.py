@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from src.commands.buscar_producto import BuscarProducto
 from src.commands.crear_fabricante import CrearFabricante
 from src.commands.crear_producto import CrearProducto
 from src.commands.health_check import HealthCheck
@@ -19,4 +20,10 @@ def crear_fabricante():
 def crear_producto():
     body = request.get_json()
     response = CrearProducto(body).execute()
+    return jsonify(response['response']), response['status_code']
+
+@blueprint.post('/producto/buscar')
+def buscar_producto():
+    body = request.get_json()
+    response = BuscarProducto(body).execute()
     return jsonify(response['response']), response['status_code']

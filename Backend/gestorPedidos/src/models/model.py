@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Identity
 from enum import Enum
 from datetime import datetime
 
@@ -27,7 +28,7 @@ class Pedido(db.Model):
 
 class PackingList(db.Model):
     __tablename__ = 'packingLists'
-
-    id = db.Column(db.String, primary_key=True)
-    producto = db.Column(db.String, db.ForeignKey('productos.id'))
+    id = db.Column(db.Integer, Identity(start=1, cycle=True), nullable=False, primary_key=True)
+    listID = db.Column(db.String)
+    producto = db.Column(db.String, nullable=False)
     cantidad = db.Column(db.String, nullable=False)
