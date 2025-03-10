@@ -1,0 +1,671 @@
+{
+	"info": {
+		"_postman_id": "f5e5f466-b9aa-4e78-9424-3fdba7922687",
+		"name": "Proyecto final",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30754919"
+	},
+	"item": [
+		{
+			"name": "BFF Web",
+			"item": [
+				{
+					"name": "Pedidos",
+					"item": [
+						{
+							"name": "Health",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host_pedidos}}/health",
+									"host": [
+										"{{host_pedidos}}"
+									],
+									"path": [
+										"health"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Crear Pedido",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cliente\": \"8a0a5ad9-c36c-4d1c-99ce-9a3ea679b23d\",\r\n    \"vendedor\": \"9eaacfa3-c17d-43c6-a41f-4d5468639b46\",\r\n    \"destino\": \"496 Calle de los libertadores, Ciudad de México, México\",\r\n    \"productos\": [\r\n        {\"sku\": 10010, \"cantidad\": 4},\r\n        {\"sku\": 10008, \"cantidad\": 1}, \r\n        {\"sku\": 10015, \"cantidad\": 4}, \r\n        {\"sku\": 10021, \"cantidad\": 5}\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host_pedidos}}/pedido/crear",
+									"host": [
+										"{{host_pedidos}}"
+									],
+									"path": [
+										"pedido",
+										"crear"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DEBUG - Crear Packing list",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"productos\": [\r\n        {\"sku\": 10004, \"cantidad\": 10}, \r\n        {\"sku\": 10005, \"cantidad\": 6}, \r\n        {\"sku\": 10006, \"cantidad\": 24}\r\n        ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host_pedidos}}/packingList/crear",
+									"host": [
+										"{{host_pedidos}}"
+									],
+									"path": [
+										"packingList",
+										"crear"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Productos",
+					"item": [
+						{
+							"name": "Health",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host_productos}}/health",
+									"host": [
+										"{{host_productos}}"
+									],
+									"path": [
+										"health"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Crear Fabricante",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Lista de nombres falsos de empresas de retail\r",
+											"const fakeCompanies = [\r",
+											"    \"Comercializadora El Sol\", \"Distribuidora Santa Fe\", \"Mayorista Los Andes\", \r",
+											"    \"Importadora del Pacífico\", \"Suministros Express\", \"Mercantil Latina\",\r",
+											"    \"Retail Solutions S.A.\", \"HiperDistribución\", \"MaxiCompra Internacional\",\r",
+											"    \"Mercado Global S.A.\", \"Logística Universal\", \"QuickTrade Mercantil\",\r",
+											"    \"Productos y Servicios del Sur\", \"Tienda Mayorista Central\",\r",
+											"    \"Red Comercial Latina\", \"Distribuciones Andinas\", \"Almacenes del Caribe\",\r",
+											"    \"Ventas y Distribución Global\", \"Econotrade América\", \"Mundial Retail Corp.\", \"TecnoSur Innovaciones\", \"Juguetes Alegra Kids\", \"Muebles Estilo Latino\", \"ElectroHogar Andino\", \"Papelería Creativa del Caribe\", \"Electrónicos Sol Naciente\", \"Muebles Modernos del Sur\", \"Juegos Didácticos Amazonas\", \"Tecno Hogar México\", \"Papelería Arcoíris Andina\", \"Electrónica La Estrella\", \"Muebles Rusticos Del Gaucho\", \"Juguetes Divertidos El Edén\", \"Electrodomésticos Brillo Latino\", \"Papelería Colores Del Trópico\", \"Tecno Sur Electrónica\", \"Muebles Vanguardistas Del Sur\", \"Juegos Inteligentes Amigos Peludos\", \"Electro Hogar Suavepiel\", \"Papelería Diseño Latino\"\r",
+											"];\r",
+											"\r",
+											"// Lista de países en español con énfasis en Latinoamérica\r",
+											"const paises = [\r",
+											"    \"Argentina\", \"Bolivia\", \"Brasil\", \"Chile\", \"Colombia\", \"Costa Rica\", \r",
+											"    \"Cuba\", \"Ecuador\", \"El Salvador\", \"Guatemala\", \"Honduras\", \"México\", \r",
+											"    \"Nicaragua\", \"Panamá\", \"Paraguay\", \"Perú\", \"Puerto Rico\", \"República Dominicana\",\r",
+											"    \"Uruguay\", \"Venezuela\", \"España\", \"Estados Unidos\", \"Canadá\", \"Italia\"\r",
+											"];\r",
+											"\r",
+											"// Generar un solo objeto JSON aleatorio\r",
+											"let randomCompany = fakeCompanies[Math.floor(Math.random() * fakeCompanies.length)];\r",
+											"let randomCountry = paises[Math.floor(Math.random() * paises.length)];\r",
+											"\r",
+											"let jsonObject = {\r",
+											"    \"nombre\": randomCompany,\r",
+											"    \"pais\": randomCountry\r",
+											"};\r",
+											"\r",
+											"// Guardar el JSON generado en una variable para usarlo en el cuerpo de la solicitud\r",
+											"pm.environment.set(\"randomBody\", JSON.stringify(jsonObject, null, 2));\r",
+											"\r",
+											"// Contador de solicitudes ejecutadas\r",
+											"let requestCount = pm.environment.get(\"requestCount\") || 0;\r",
+											"\r",
+											"// Incrementar el contador\r",
+											"requestCount++;\r",
+											"\r",
+											"// Guardar el contador actualizado\r",
+											"pm.environment.set(\"requestCount\", requestCount);\r",
+											"\r",
+											"// Si no se ha alcanzado el límite de 100, ejecutar la solicitud nuevamente\r",
+											"if (requestCount < 100) {\r",
+											"    postman.setNextRequest(pm.info.requestName);\r",
+											"} else {\r",
+											"    // Restablecer el contador cuando termine\r",
+											"    pm.environment.unset(\"requestCount\");\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{randomBody}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host_productos}}/fabricante",
+									"host": [
+										"{{host_productos}}"
+									],
+									"path": [
+										"fabricante"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Crear Producto",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"\r",
+											"// Lista de nombres falsos de empresas de retail\r",
+											"const companyIDs = [\r",
+											"\"e25720f8-837f-43d1-833d-5af8ef234f8c\",\r",
+											"\"d777468e-fbf6-4c3f-8117-9754fcf89354\",\r",
+											"\"4bfb671f-6614-4015-bd6b-05297e0ae91f\",\r",
+											"\"84b4c204-6a04-40bc-b022-661a4d4712f1\",\r",
+											"\"f49c4aa3-8299-4792-be42-ea70c957b28d\"\r",
+											"];\r",
+											"\r",
+											"// Lista de países en español con énfasis en Latinoamérica\r",
+											"const fakeProductNames = [\r",
+											"    \"Lápiz CarbonGraph Caja x 12 und\", \"Cuaderno Universitario 100 hojas, Rayado, Colores Surtidos\", \"Bolígrafo de Gel, Tinta Negra, Paquete x 10 und\", \"Mochila Escolar Reforzada, Diseño Ergonómico, Varios Compartimentos\", \"Agenda Ejecutiva Semanal, Tapa Dura, Cierre Elástico\", \"Resaltador Fluorescente, Colores Surtidos, Paquete x 4 und\", \"Goma de Borrar Suave, Libre de Látex, Paquete x 3 und\", \"Carpeta Archivadora, Tamaño Carta, Anillas Metálicas\", \"Bloques de Construcción de Madera, 100 Piezas, Colores Naturales\", \"Muñeca Interactiva con Sonidos y Accesorios, Vestidos Intercambiables\", \"Coche a Control Remoto, Escala 1:18, Alta Velocidad\", \"Juego de Mesa Familiar, Estrategia y Diversión, 2-4 Jugadores\", \"Puzzle 3D de Madera, Diseño de Monumento Histórico, 200 Piezas\", \"Pelota de Futbol, Tamaño Oficial, Cosida a Máquina\", \"Juego de Cartas Coleccionables, Edición Limitada, 50 Cartas\", \"Tablet Android 10 pulgadas, 32GB Almacenamiento, Cámara Dual\", \"Auriculares Bluetooth Inalámbricos, Cancelación de Ruido, Estuche de Carga\", \"Parlante Portátil Bluetooth, Sonido Estéreo, Resistente al Agua\", \"Cámara de Seguridad WiFi, Visión Nocturna, Detección de Movimiento\", \"Calculadora Científica con Funciones Avanzadas, Pantalla LCD\", \"Control Remoto Universal, Compatible con Múltiples Dispositivos\", \"Cargador Portátil de Batería Externa, 10000mAh, Doble Salida USB\", \"Licuadora de Vaso de Vidrio, Múltiples Velocidades, Función de Pulso\", \"Aspiradora Ciclónica sin Bolsa, Alta Potencia, Filtro HEPA\", \"Ventilador de Torre con Control Remoto, 3 Velocidades, Temporizador\", \"Horno Eléctrico de Convección, Capacidad 30 Litros, Temporizador\", \"Plancha de Vapor con Suela Cerámica, Función Antigoteo, Vapor Vertical\", \"Cafetera Eléctrica de Goteo, Capacidad 12 Tazas, Filtro Permanente\", \"Escritorio de Oficina con Cajones, Superficie de Melamina, Diseño Moderno\", \"Silla Ergonómica de Oficina, Reposacabezas Ajustable, Soporte Lumbar\", \"Estantería de Madera Maciza, 5 Niveles, Acabado Natural\", \"Mesa de Centro Elevable, Compartimento Interior, Diseño Minimalista\", \"Lámpara de Pie con Pantalla de Tela, Altura Ajustable, Luz Cálida\", \"Sillón Reclinable de Cuero Sintético, Función de Masaje, Portavasos\"\r",
+											"];\r",
+											"\r",
+											"const fakePrice = [\r",
+											"    10500, 20958, 13440, 63000, 35700, 7560, 5040, 33558, 105000, 147000, 117600, 92400, 75600, 42000, 52500, 504000, 336000, 189000, 273000, 75600, 41958, 105000, 231000, 294000, 159600, 357000, 168000, 126000, 630000, 504000, 378000, 756000, 315000, 1050000\r",
+											"]\r",
+											"\r",
+											"// Generar un solo objeto JSON aleatorio\r",
+											"let randomCompanyID = companyIDs[Math.floor(Math.random() * companyIDs.length)];\r",
+											"let randomProduct = fakeProductNames[Math.floor(Math.random() * fakeProductNames.length)];\r",
+											"let randomPrice = fakePrice[Math.floor(Math.random() * fakeProductNames.length)];\r",
+											"\r",
+											"let jsonObject = {\r",
+											"    \"id_fabricante\": randomCompanyID,\r",
+											"    \"nombre\": randomProduct,\r",
+											"    \"valorUnitario\": randomPrice\r",
+											"};\r",
+											"\r",
+											"// Guardar el JSON generado en una variable para usarlo en el cuerpo de la solicitud\r",
+											"pm.environment.set(\"randomBody\", JSON.stringify(jsonObject, null, 2));\r",
+											"\r",
+											"// Contador de solicitudes ejecutadas\r",
+											"let requestCount = pm.environment.get(\"requestCount\") || 0;\r",
+											"\r",
+											"// Incrementar el contador\r",
+											"requestCount++;\r",
+											"\r",
+											"// Guardar el contador actualizado\r",
+											"pm.environment.set(\"requestCount\", requestCount);\r",
+											"\r",
+											"// Si no se ha alcanzado el límite de 100, ejecutar la solicitud nuevamente\r",
+											"if (requestCount < 100) {\r",
+											"    pm.execution.setNextRequest(pm.info.requestName);\r",
+											"} else {\r",
+											"    // Restablecer el contador cuando termine\r",
+											"    pm.environment.unset(\"requestCount\");\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{{randomBody}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host_productos}}/producto",
+									"host": [
+										"{{host_productos}}"
+									],
+									"path": [
+										"producto"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar Producto",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"sku\": 10001\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host_productos}}/producto/buscar",
+									"host": [
+										"{{host_productos}}"
+									],
+									"path": [
+										"producto",
+										"buscar"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "BFF - Health",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host_BFF_Web}}",
+							"host": [
+								"{{host_BFF_Web}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Productos - Health",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host_BFF_Web}}/api/productos/health",
+							"host": [
+								"{{host_BFF_Web}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Productos - Crear fabricante",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Depositos Curitiba\",\r\n    \"pais\": \"Brasil\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host_BFF_Web}}/api/productos/fabricante",
+							"host": [
+								"{{host_BFF_Web}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"fabricante"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Productos - Buscar producto",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sku\": 10001\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host_BFF_Web}}/api/productos/buscar",
+							"host": [
+								"{{host_BFF_Web}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"buscar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pedidos - Health",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host_BFF_Web}}/api/gestorPedidos/health",
+							"host": [
+								"{{host_BFF_Web}}"
+							],
+							"path": [
+								"api",
+								"gestorPedidos",
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pedidos - Crear Pedido",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cliente\": \"8a0a5ad9-c36c-4d1c-99ce-9a3ea679b23d\",\r\n    \"vendedor\": \"9eaacfa3-c17d-43c6-a41f-4d5468639b46\",\r\n    \"destino\": \"496 Calle de los libertadores, Ciudad de México, México\",\r\n    \"productos\": [\r\n        {\"sku\": 10010, \"cantidad\": 4},\r\n        {\"sku\": 10008, \"cantidad\": 1}, \r\n        {\"sku\": 10015, \"cantidad\": 4}, \r\n        {\"sku\": 10021, \"cantidad\": 5}\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host_BFF_Web}}/api/gestorPedidos/pedido/crear",
+							"host": [
+								"{{host_BFF_Web}}"
+							],
+							"path": [
+								"api",
+								"gestorPedidos",
+								"pedido",
+								"crear"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host_productos",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "host_pedidos",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "host_BFF_Web",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
