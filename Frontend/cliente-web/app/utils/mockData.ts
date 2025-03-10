@@ -1,3 +1,11 @@
+import fabricanteMockData from '../fabricante_mock.json';
+import { v4 as uuidv4 } from "uuid"
+
+interface Fabricante {
+  nombre: string;
+  pais: string;
+}
+
 const generateRandomEmail = () => {
   const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
   let name = '';
@@ -12,60 +20,16 @@ const generateRandomEmail = () => {
   return `${name}@${domain}`;
 };
 
-const fabricanteFactory = () => {
-  const names = [
-    'Toyota',
-    'Ford',
-    'BMW',
-    'Honda',
-    'Tesla',
-    'Renault',
-    'Fiat',
-    'Samsung',
-    'Sony',
-    'LG',
-    'Panasonic',
-    'Philips',
-    'Intel',
-    'AMD',
-    'Microsoft',
-    'Apple',
-    'Google',
-    'Amazon',
-    'Facebook',
-    'Netflix',
-    'Coca-Cola',
-    'Pepsi',
-    'Nike',
-    'Adidas',
-    'Puma',
-    "McDonald's",
-    'Burger King',
-    'Airbus',
-    'Boeing',
-    'Siemens',
-    'Bosch',
-    'General Electric',
-  ];
+const fabricanteFactory = async () => {
+  const fabricantes: Fabricante[] = fabricanteMockData as Fabricante[];
 
-  const country = [
-    'Japón',
-    'EE.UU.',
-    'Alemania',
-    'Francia',
-    'Italia',
-    'Corea del Sur',
-  ];
+  const randomIndex = Math.floor(Math.random() * fabricantes.length);
+  const randomFabricante = fabricantes[randomIndex]
 
-  const dateString = JSON.stringify(new Date());
+  const fabricanteNombre : string = randomFabricante.nombre + String(uuidv4());
 
-  return {
-    nombre:
-      names[Math.floor(Math.random() * names.length)] + ' - ' + dateString,
-    pais:
-      country[Math.floor(Math.random() * country.length)] + ' - ' + dateString,
-  };
-};
+  return { nombre: fabricanteNombre, pais: randomFabricante.pais };
+}
 
 const pedidoFactory = () => {
   const sampleData = {
@@ -80,13 +44,13 @@ const pedidoFactory = () => {
   return {
     productos:
       sampleData.productos[
-        Math.floor(Math.random() * sampleData.productos.length)
+      Math.floor(Math.random() * sampleData.productos.length)
       ],
     cliente:
       sampleData.cliente[Math.floor(Math.random() * sampleData.cliente.length)],
     vendedor:
       sampleData.vendedor[
-        Math.floor(Math.random() * sampleData.vendedor.length)
+      Math.floor(Math.random() * sampleData.vendedor.length)
       ],
     destino:
       sampleData.destino[Math.floor(Math.random() * sampleData.destino.length)],

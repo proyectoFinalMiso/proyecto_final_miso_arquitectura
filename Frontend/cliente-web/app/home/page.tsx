@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { auth } from '../firebase/config';
-import DualFormPage from '../components/DualForm';
+//import DualFormPage from '../components/DualForm';
 import UserInfoDisplay from '../components/UserInfoDisplay';
 
 const Home: React.FC = () => {
@@ -12,7 +12,8 @@ const Home: React.FC = () => {
         <UserInfoDisplay userData={auth.currentUser} />
       </div>
       <div>
-        <DualFormPage />
+        <h1>Prueba</h1>
+        {/* <DualFormPage /> */}
       </div>
     </div>
   );

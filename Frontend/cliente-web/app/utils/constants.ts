@@ -1,4 +1,4 @@
-const FABRICANTES_API_URL = 'http://127.0.0.1:3001';
-const PEDIDOS_API_URL = 'http://127.0.0.1:3002';
+const FABRICANTES_API_URL = 'https://cr-bff-webapp-488938258128.us-central1.run.app/';
+const PEDIDOS_API_URL = 'https://cr-bff-webapp-488938258128.us-central1.run.app';
 
 export { FABRICANTES_API_URL, PEDIDOS_API_URL };
