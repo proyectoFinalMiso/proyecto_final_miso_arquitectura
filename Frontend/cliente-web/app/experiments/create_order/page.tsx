@@ -29,10 +29,12 @@ const Experiment: React.FC = () => {
 
   const handleCreateOrder = async () => {
     try {
+      const data = pedidoFactory()
+      console.log(data)
       const response = await fetchData({
         method: "POST",
         url: create_pedido_url(),
-        data: pedidoFactory(),
+        data: data,
       });
       console.log("Pedido creado:", response);
     } catch (error) {
@@ -40,15 +42,26 @@ const Experiment: React.FC = () => {
     }
   };
 
-  handleLogin().then(async () => {
+  const runExperiment = async () => {
+    // console.log(new Date().toISOString())
+    // const loginResult = await handleLogin();
     await handleCreateOrder();
-  });
+    // if (loginResult === 200) {
+    //   // console.log("Login successful, proceeding to create manufacturer");
+      
+    //   // console.log(new Date().toISOString())
+    // } else {
+    //   // console.error("Login failed, not creating manufacturer");
+    // }
+  };
+
+  runExperiment();
 
   return (
     <div>
-      <h1>Experimento - Crear pedido</h1>
+      <h1>Experimento - Crear fabricante </h1>
     </div>
   );
-};
+}
 
 export default Experiment;
